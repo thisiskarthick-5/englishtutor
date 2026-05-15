@@ -565,7 +565,7 @@
                 document.getElementById('userProfile').addEventListener('click', () => {
                     const surveyDone = localStorage.getItem('surveyCompleted');
                     if(confirm("Ready to study or want to log out?\nOK to go to Study Dashboard\nCancel to Logout")) {
-                        window.location.href = surveyDone ? 'study.html' : 'survey.html';
+                        window.location.href = surveyDone ? 'dashboard.html' : 'survey.html';
                     } else {
                         signOut(auth).then(() => window.location.reload());
                     }
