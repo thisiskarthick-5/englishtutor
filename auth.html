@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth - Nyinauni</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-yellow: #faff54;
+            --text-dark: #111827;
+            --bg-light: #f9fafb;
+            --accent-blue: #42C2FF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: white;
+            color: var(--text-dark);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Modern Loader --- */
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .loader-logo {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .loader-bar {
+            width: 150px;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background: var(--primary-yellow);
+            animation: load 2.5s forwards cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.7; }
+        }
+
+        @keyframes load { to { width: 100%; } }
+        .loader-hidden { opacity: 0; visibility: hidden; }
+
+        .auth-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        /* Split Screen Sections */
+        .auth-section {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .image-side {
+            flex: 1.2;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 60px;
+            color: white;
+        }
+
+        .image-overlay h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .form-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            background: white;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            z-index: 100;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-auth {
+            font-weight: 800;
+            font-size: 24px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            opacity: 0.6;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-yellow);
+            background: #fffdf5;
+        }
+
+        .btn-auth {
+            width: 100%;
+            background: var(--text-dark);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-auth:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-google {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid #eee;
+            margin-top: 15px;
+        }
+
+        .btn-google img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 25px 0;
+            opacity: 0.5;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #eee;
+        }
+
+        .divider:not(:empty)::before { margin-right: 15px; }
+        .divider:not(:empty)::after { margin-left: 15px; }
+
+        .toggle-auth {
+            margin-top: 25px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .toggle-auth a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Positioning for Sign In and Sign Up */
+        #signup-section { order: 1; }
+        #signin-section { order: 2; }
+
+        /* Left/Right requirement:
+           Sign up: Left image, Right form (Section 1)
+           Sign in: Left form, Right image (Section 2)
+        */
+
+        .signup-form-side { order: 2; }
+        .signup-image-side { order: 1; }
+
+        .signin-form-side { order: 1; }
+        .signin-image-side { order: 2; }
+
+        .slide-signin .auth-container {
+            transform: translateX(-100%);
+        }
+
+        /* Error Message */
+        .error-msg {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body class="">
+
+    <!-- Modern Loader -->
+    <div id="loader">
+        <div class="loader-logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Nyinauni
+        </div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Home
+    </a>
+
+    <div class="auth-container" id="authContainer">
+        
+        <!-- SIGN UP SECTION (Image Left, Form Right) -->
+        <section class="auth-section" id="signup-section">
+            <div class="image-side signup-image-side">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1200" alt="Join us">
+                <div class="image-overlay">
+                    <h2>Master English with ease.</h2>
+                    <p>Join thousands of students and start your journey today with Nyinauni.</p>
+                </div>
+            </div>
+            <div class="form-side signup-form-side">
+                <div class="form-wrapper">
+                    <div class="logo-auth">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        Nyinauni
+                    </div>
+                    <h1>Create Account</h1>
+                    <p class="subtitle">Start your 7-day free trial today.</p>
+                    
+                    <div id="signup-error" class="error-msg"></div>
+
+                    <form id="signupForm">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="signupName" placeholder="Enter your name" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <input type="email" id="signupEmail" placeholder="name@example.com" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" id="signupPassword" placeholder="••••••••" required minlength="6">
+                        </div>
+                        <button type="submit" class="btn-auth" id="signupBtn">Sign Up</button>
+                    </form>
+
+                    <div class="divider">OR</div>
+
+                    <button class="btn-auth btn-google" onclick="handleGoogleSignIn()">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                        Sign up with Google
+                    </button>
+                    
+                    <p class="toggle-auth">Already have an account? <a href="#" onclick="showSignIn()">Sign In</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIGN IN SECTION (Form Left, Image Right) -->
+        <section class="auth-section" id="signin-section">
+            <div class="form-side signin-form-side">
+                <div class="form-wrapper">
+                    <div class="logo-auth">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        Nyinauni
+                    </div>
+                    <h1>Welcome Back</h1>
+                    <p class="subtitle">Please enter your details to sign in.</p>
+
+                    <div id="signin-error" class="error-msg"></div>
+
+                    <form id="signinForm">
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <input type="email" id="signinEmail" placeholder="name@example.com" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" id="signinPassword" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-auth" id="signinBtn">Sign In</button>
+                    </form>
+
+                    <div class="divider">OR</div>
+
+                    <button class="btn-auth btn-google" onclick="handleGoogleSignIn()">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                        Sign in with Google
+                    </button>
+                    
+                    <p class="toggle-auth">Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
+                </div>
+            </div>
+            <div class="image-side signin-image-side">
+                <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=1200" alt="Welcome back">
+                <div class="image-overlay">
+                    <h2>Continue your progress.</h2>
+                    <p>Your mentors and lessons are waiting for you. Dive back in!</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjwJbwWk7Ynj-SXjCYT0S97ETzFV0OG2E",
+            authDomain: "database1-8cb65.firebaseapp.com",
+            projectId: "database1-8cb65",
+            storageBucket: "database1-8cb65.firebasestorage.app",
+            messagingSenderId: "519074213619",
+            appId: "1:519074213619:web:83465fe88c4ea6b32a1186",
+            measurementId: "G-BNMPG3CZK3"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // UI Logic
+        window.showSignIn = () => {
+            document.body.classList.add('slide-signin');
+            document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+        };
+
+        window.showSignUp = () => {
+            document.body.classList.remove('slide-signin');
+            document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+        };
+
+        // Helper to set loading state
+        const setLoading = (btnId, isLoading) => {
+            const btn = document.getElementById(btnId);
+            if (isLoading) {
+                btn.disabled = true;
+                btn.dataset.oldText = btn.innerHTML;
+                btn.innerHTML = '<span class="spinner"></span> Working...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = btn.dataset.oldText;
+            }
+        };
+
+        // Google Sign In
+        window.handleGoogleSignIn = async () => {
+            try {
+                await signInWithPopup(auth, googleProvider);
+                window.location.href = 'survey.html';
+            } catch (error) {
+                console.error(error);
+                alert("Google Sign-In failed: " + error.message);
+            }
+        };
+
+        // Sign Up Logic
+        const signupForm = document.getElementById('signupForm');
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const errorEl = document.getElementById('signup-error');
+
+            setLoading('signupBtn', true);
+            errorEl.style.display = 'none';
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(userCredential.user, { displayName: name });
+                window.location.href = 'survey.html';
+            } catch (error) {
+                errorEl.textContent = error.code.replace('auth/', '').replace(/-/g, ' ');
+                errorEl.style.display = 'block';
+            } finally {
+                setLoading('signupBtn', false);
+            }
+        });
+
+        // Sign In Logic
+        const signinForm = document.getElementById('signinForm');
+        signinForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signinEmail').value;
+            const password = document.getElementById('signinPassword').value;
+            const errorEl = document.getElementById('signin-error');
+
+            setLoading('signinBtn', true);
+            errorEl.style.display = 'none';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = 'survey.html';
+            } catch (error) {
+                errorEl.textContent = "Invalid credentials. Please try again.";
+                errorEl.style.display = 'block';
+            } finally {
+                setLoading('signinBtn', false);
+            }
+        });
+
+        // Hide loader on initial load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('loader-hidden');
+            }, 500);
+        });
+    </script>
+
+    <style>
+        /* Simple spinner for loading state */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
+</body>
+</html>

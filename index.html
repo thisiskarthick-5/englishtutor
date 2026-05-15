@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyinauni - Learn English Anywhere</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-yellow: #faff54;
+            --text-dark: #111827;
+            --blue-card: #42C2FF;
+            --green-card: #57E2A1;
+            --orange-card: #FFB344;
+            --accent-purple: #9d7dfa;
+            --bg-light: #f9fafb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: white;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--primary-yellow);
+            padding: 25px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 15px;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        nav ul li a:hover { opacity: 1; }
+
+        .btn-signin {
+            border: 1.5px solid var(--text-dark);
+            padding: 10px 32px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-signin:hover { background: var(--text-dark); color: white; }
+
+        /* --- Hero Section --- */
+        .hero {
+            background-color: var(--primary-yellow);
+            text-align: center;
+            padding: 60px 5% 0 5%;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: clamp(32px, 5vw, 68px);
+            font-weight: 800;
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            opacity: 0.7;
+            margin-bottom: 40px;
+        }
+
+        .btn-started {
+            background-color: var(--text-dark);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-started:hover { transform: scale(1.05); }
+
+        /* Floating UI elements from the design */
+        .stat-badge {
+            position: absolute;
+            left: 10%;
+            top: 40%;
+            text-align: left;
+        }
+
+        .stat-badge h3 {
+            font-size: 36px;
+            margin-bottom: -5px;
+        }
+
+        .stat-underline {
+            width: 100%;
+            height: 4px;
+            background: var(--blue-card);
+            border-radius: 2px;
+            margin-bottom: 5px;
+        }
+
+        .stat-badge p {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .mentor-badge {
+            position: absolute;
+            right: 10%;
+            top: 40%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 200px;
+            text-align: left;
+        }
+
+        .mentor-icon {
+            background: #000;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+
+        .stars { position: absolute; color: #ff4757; font-size: 28px; }
+        .dot { position: absolute; width: 25px; height: 25px; border-radius: 50%; background: var(--accent-purple); }
+
+        /* --- Hero Images (Tilted Cards) --- */
+        .hero-images {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 80px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .student-card {
+            width: 320px;
+            height: 400px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .card-inner {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 90%;
+            border-radius: 25px;
+            z-index: 1;
+        }
+
+        .student-card img {
+            width: 100%;
+            height: 110%;
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+            border-radius: 0 0 25px 25px;
+        }
+
+        /* Applying the tilt from design */
+        .card-1 { transform: rotate(-3deg); }
+        .card-1 .card-inner { background-color: var(--blue-card); }
+        .card-2 { transform: translateY(-20px); }
+        .card-2 .card-inner { background-color: var(--green-card); }
+        .card-3 { transform: rotate(3deg); }
+        .card-3 .card-inner { background-color: var(--orange-card); }
+
+        /* --- About Us Section --- */
+        .about-section {
+            padding: 150px 8% 100px 8%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .about-content h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+
+        .about-content p {
+            font-size: 18px;
+            line-height: 1.8;
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .feature-item span {
+            background: var(--primary-yellow);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 14px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #111827;
+            color: white;
+            padding: 80px 8% 40px 8%;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-logo {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: var(--primary-yellow);
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 15px; opacity: 0.6; cursor: pointer; transition: 0.3s; }
+        .footer-col ul li:hover { opacity: 1; color: var(--primary-yellow); }
+
+        .newsletter input {
+            background: #1f2937;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            opacity: 0.5;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 45px; }
+            .stat-badge, .mentor-badge { display: none; }
+            .hero-images { flex-wrap: wrap; }
+            .about-section { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        /* --- Modern Loader --- */
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .loader-logo {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .loader-bar {
+            width: 150px;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background: var(--primary-yellow);
+            animation: load 2.5s forwards cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.7; }
+        }
+
+        @keyframes load { to { width: 100%; } }
+        .loader-hidden { opacity: 0; visibility: hidden; }
+
+        /* --- Header Profile --- */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .user-profile:hover {
+            background: white;
+            border-color: #eee;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Modern Loader -->
+    <div id="loader">
+        <div class="loader-logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Nyinauni
+        </div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Nyinauni
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Courses</a></li>
+                <li><a href="#">Admission</a></li>
+                <li><a href="#">Testimonial</a></li>
+                <li><a href="#about">About Us</a></li>
+            </ul>
+        </nav>
+        <div id="authContainer">
+            <a href="auth.html" class="btn-signin" id="authBtn">Sign in</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="stars" style="top: 10%; left: 15%;">★</div>
+        <div class="stars" style="top: 15%; right: 12%;">★</div>
+        <div class="dot" style="bottom: 50px; right: 8%;"></div>
+
+        <div class="stat-badge">
+            <h3>1432</h3>
+            <div class="stat-underline"></div>
+            <p style="opacity: 0.7;">Members join</p>
+        </div>
+
+        <div class="mentor-badge">
+            <div class="mentor-icon">🏅</div>
+            <p style="font-size: 14px; font-weight: 500;">Professional and experienced mentor</p>
+        </div>
+
+        <h1 class="hero-title">Learn Easily<br>Anywhere and Anytime</h1>
+        <p class="hero-subtitle">With today's technology learning English is easy with nyinauni</p>
+        
+        <a href="#" class="btn-started">Started Now</a>
+
+        <!-- Tilted Image Cards -->
+        <div class="hero-images">
+            <div class="student-card card-1">
+                <div class="card-inner"></div>
+                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400" alt="Student 1">
+            </div>
+            <div class="student-card card-2">
+                <div class="card-inner"></div>
+                <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=600" alt="Student 2">
+            </div>
+            <div class="student-card card-3">
+                <div class="card-inner"></div>
+                <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=600" alt="Student 3">
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about-section" id="about">
+        <div class="about-image">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800" alt="Team Learning">
+        </div>
+        <div class="about-content">
+            <h2>Transforming how the world learns English.</h2>
+            <p>At Nyinauni, we believe that language learning should be accessible, engaging, and flexible. Our platform connects students with top-tier mentors globally, using interactive tools that make every lesson count.</p>
+            
+            <div class="feature-list">
+                <div class="feature-item"><span>✓</span> 24/7 Access to interactive modules</div>
+                <div class="feature-item"><span>✓</span> Certified native-speaking mentors</div>
+                <div class="feature-item"><span>✓</span> Personalized learning paths for every level</div>
+                <div class="feature-item"><span>✓</span> Community-driven conversation clubs</div>
+            </div>
+            
+            <a href="#" class="btn-started" style="margin-top: 20px;">Learn More About Us</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">Nyinauni</div>
+                <p style="opacity: 0.6; line-height: 1.6;">Our mission is to empower people through language, opening doors to global opportunities and cross-cultural communication.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li>Browse Courses</li>
+                    <li>Success Stories</li>
+                    <li>Mental Health</li>
+                    <li>Video Tutorials</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li>Our Mentors</li>
+                    <li>Careers</li>
+                    <li>Privacy Policy</li>
+                    <li>Terms of Service</li>
+                </ul>
+            </div>
+            <div class="footer-col newsletter">
+                <h4>Join our Community</h4>
+                <p style="opacity: 0.6; margin-bottom: 20px; font-size: 14px;">Get tips and free resources directly in your inbox.</p>
+                <input type="email" placeholder="Email address...">
+                <button class="btn-signin" style="background: var(--primary-yellow); color: black; border: none; width: 100%; cursor: pointer;">Subscribe</button>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 Nyinauni Learning Platform. Built for the future of education.</p>
+            <p>Designed by You • Developed by AI</p>
+        </div>
+    </footer>
+
+    <!-- Firebase Auth Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration (MUST MATCH auth.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjwJbwWk7Ynj-SXjCYT0S97ETzFV0OG2E",
+            authDomain: "database1-8cb65.firebaseapp.com",
+            projectId: "database1-8cb65",
+            storageBucket: "database1-8cb65.firebasestorage.app",
+            messagingSenderId: "519074213619",
+            appId: "1:519074213619:web:83465fe88c4ea6b32a1186",
+            measurementId: "G-BNMPG3CZK3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const authContainer = document.getElementById('authContainer');
+        const loader = document.getElementById('loader');
+
+        // Loader hide helper
+        const hideLoader = () => {
+            setTimeout(() => {
+                loader.classList.add('loader-hidden');
+            }, 800);
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                authContainer.innerHTML = `
+                    <div class="user-profile" id="userProfile">
+                        <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + (user.displayName || 'User')}" class="user-avatar" alt="Avatar">
+                        <span class="user-name">${user.displayName || 'Student'}</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
+                `;
+                document.getElementById('userProfile').addEventListener('click', () => {
+                    const surveyDone = localStorage.getItem('surveyCompleted');
+                    if(confirm("Ready to study or want to log out?\nOK to go to Study Dashboard\nCancel to Logout")) {
+                        window.location.href = surveyDone ? 'study.html' : 'survey.html';
+                    } else {
+                        signOut(auth).then(() => window.location.reload());
+                    }
+                });
+            } else {
+                // User is signed out
+                authContainer.innerHTML = `<a href="auth.html" class="btn-signin">Sign in</a>`;
+            }
+            hideLoader();
+        });
+    </script>
+</body>
+</html>
